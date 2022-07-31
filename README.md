@@ -1,57 +1,61 @@
-# Northcoders News API
+# Northcoders News API - By Chris Rule
 
-## Background
+## Project Description
 
 We will be building an API for the purpose of accessing application data programmatically. The intention here is to mimic the building of a real world backend service (such as reddit) which should provide this information to the front end architecture.
 
-Your database will be PSQL, and you will interact with it using [node-postgres](https://node-postgres.com/).
+## Installation
 
-## Kanban
+This project utilises a PSQL database which is interacted with via node.js (https://node-postgres.com/).
 
-### Link to your Trello Board here: https://trello.com/b/7yiHe1nI
+The following technologies have all been installed with node package manager (https://www.npmjs.com/).
 
-To keep track of the tasks involved in this project we're going to use a kanban board. Ensure that you work on one _ticket_ at time. You can click on the ticket to find out more information about what is required for the feature. A ticket is not considered complete unless both the happy path and errors response are handled. You can make use of the checklist on each ticket to keep track of the errors you want to handle. You can also make use of [error-handling.md](error-handling.md) to consider the error codes we may wish to respond with.
+Please refer to the package.json file in the root directory for a complete list of dependencies and development dependencies - at the time of writing project dependencies are as follows:
 
-**Please ensure you work through the tickets in numerical order.**
+### Dependencies
 
-## Git Branching and Pull Requests
+- dotenv (https://www.npmjs.com/package/dotenv)
+- express (https://expressjs.com/)
+- pg (https://node-postgres.com/)
+- pg-format (https://www.npmjs.com/package/pg-format)
 
-You will be working on each ticket on a new **branch**.
+### Development Dependencies
 
-To create and switch to a new git branch use the command:
+- husky (https://typicode.github.io/husky/#/)
+- jest (https://jestjs.io/)
+- jest-extended (https://www.npmjs.com/package/jest-extended)
+- jest-sorted (https://www.npmjs.com/package/jest-sorted)
+- nodemon (https://www.npmjs.com/package/nodemon)
+- supertest (https://www.npmjs.com/package/supertest)
 
-```
-git checkout -b <new branch name>
-```
+## Setup
 
-This will create a branch and move over to that branch. (Omit the `-b` flag if you wish to switch to an already existing branch).
+For security, the names of the databases are .gitignored on this project and so will require setup for the project to be ran on a local machine
 
-We recommend that you name the branch after the number assigned to each ticket via the header. eg. `ncnews-1`
+The two files are ".env.development" and ".env.test" and will be used by our Dotenv module to load the environment variables contained in these files into process.env (https://www.npmjs.com/package/dotenv).
 
-When pushing the branch to git hub ensure that you make reference to the branch you are pushing to on the remote.
+Each file should contain the following:
 
-```
-git push origin <branch name>
-```
+PGDATABASE=database_name
 
-From github you can make a pull request and share the link and ticket number via a pull request specific nchelp using the command `nchelp pr`. A tutor will swing by to review your code. Ensure that you keep your trello up to date whilst you await the PR approval. Regular `nchelp` will be available for when you need support.
+## Run the Project
 
-Once a pull request been accepted be sure to switch back to the main branch and pull down the updated changes.
+The intent is to have this project executable at four different stages:
 
-```
-git checkout main
+Note - previous stages may still be in progress when later stages have been reached.
 
-git pull origin main
-```
+1 - Unit testing only.
+If app.js is not visible in the root project directory then this project is still in setup - refer to **tests** folder.
 
-You can tidy up your local branches once they have been pull into main by deleting them:
+2 - Integration and unit testing.
+If app.js has been produced and placed in the root project directory then integration testing will be taking place alongside unit testing.
 
-```
-git branch -D <local branch>
-```
+3 - Simple back end testing
+If a listen.js file has been placed in the root directory and the PORT is manually assigned then the project is at an early stage of usability and API calls can be made on the local machine using an API client like Insomnia (https://insomnia.rest/)
 
-## Husky
+4 - Cloud back end testing with Heroku
+If a listen.js file exists in the root directory and the PORT is assigned from the process.env environment object then the project has been deployed to Heroku (https://www.heroku.com/) and API calls should be available online.
 
-To ensure we are not commiting broken code this project makes use of git hooks. Git hooks are scripts triggered during certain events in the git lifecycle. Husky is a popular package which allows us to set up and maintain these scripts. This project makes use a _pre-commit hook_. When we attempt to commit our work, the script defined in the `pre-commit` file will run. If any of our tests fail than the commit will be aborted.
+## Licensing
 
-The [Husky documentation](https://typicode.github.io/husky/#/) explains how to configure Husky for your own project as well as creating your own custom hooks.\_
+FILL THIS OUT
