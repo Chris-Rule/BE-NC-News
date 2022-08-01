@@ -38,7 +38,6 @@ describe("/api/nothinghere", () => {
             .get('/app/nothinghere')
             .expect(404)
             .then(({body}) => {
-                console.log(Object.keys(body));
                 expect(body.msg).toBe('bad path!');
             })
         })
