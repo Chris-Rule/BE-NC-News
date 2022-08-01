@@ -1,3 +1,5 @@
 node_modules
 .env.*
+db/db-check-dev.sql
+db/db-check-test.sql
 0 - NOTES-MARKDOWNS
