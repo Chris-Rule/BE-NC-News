@@ -19,7 +19,7 @@ describe("/api/users", () => {
             .get('/api/users')
             .expect(200)
             .then(({body}) => {
-                expect(typeof body).toBe("object");
+                expect(body).toBeInstanceOf(Object);
                 expect(body).toHaveProperty('users');
                 expect(Array.isArray(body.users)).toBe(true);
                 expect(body.users[0]).toHaveProperty('username');

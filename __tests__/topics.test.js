@@ -19,7 +19,7 @@ describe("/api/topics", () => {
             .get('/api/topics')
             .expect(200)
             .then(({body}) => {
-                expect(typeof body).toBe("object");
+                expect(body).toBeInstanceOf(Object);
                 expect(body).toHaveProperty('topics');
                 expect(Array.isArray(body.topics)).toBe(true);
                 expect(body.topics[0]).toHaveProperty('slug');
