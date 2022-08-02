@@ -3,6 +3,8 @@ const request = require('supertest');
 const seed = require('../db/seeds/seed');
 const db = require('../db/connection');
 const data = require('../db/data/test-data');
+//const express = require('express');
+//app.use(express.json());
 
 afterAll(() => {
   return db.end();
@@ -24,6 +26,30 @@ describe("/api/topics", () => {
                 expect(Array.isArray(body.topics)).toBe(true);
                 expect(body.topics[0]).toHaveProperty('slug');
                 expect(body.topics[0]).toHaveProperty('description');
+            })
+        })
+    })
+})
+
+describe("/api/articles/:article_id", () => {
+    describe("GET", () => {
+        test("Status 200 - returns an article object", () => {
+            return request(app)
+            .get('/api/articles/2')
+            .expect(200)
+            .then(({body}) => {
+                const article = body.article;
+                expect(typeof body).toBe("object");
+                expect(body).toHaveProperty('article');
+                expect(typeof article).toBe("object");
+                expect(article).toHaveProperty('author');
+                expect(article).toHaveProperty('title');
+                expect(article).toHaveProperty('article_id');
+                expect(article.article_id).toBe(2);
+                expect(article).toHaveProperty('body');
+                expect(article).toHaveProperty('topic');
+                expect(article).toHaveProperty('created_at');
+                expect(article).toHaveProperty('votes');
             })
         })
     })
