@@ -67,6 +67,81 @@ describe("/api/articles/:article_id", () => {
               });
         })
     })
+    describe("PATCH", () => {
+        test("Status 200 - returns an article object", () => {
+            const incomingVotes = {
+                inc_votes: 5
+            }
+            return request(app)
+            .patch('/api/articles/3')
+            .send(incomingVotes)
+            .expect(201)
+            .then(({body}) => {
+                const article = body.article;
+                console.log(article);
+                expect(typeof body).toBe("object");
+                expect(body).toHaveProperty('article');
+                expect(typeof article).toBe("object");
+                expect(article).toHaveProperty('article_id');
+                expect(article.article_id).toBe(3);
+                expect(article).toHaveProperty('votes');
+                expect(article.votes).toBe(5);
+                expect(article).toHaveProperty('author');
+                expect(article).toHaveProperty('title');
+                expect(article).toHaveProperty('body');
+                expect(article).toHaveProperty('topic');
+                expect(article).toHaveProperty('created_at');
+            })
+        })
+        test("Status 404 - Not found, ID is valid but does not exist", () => {
+            const incomingVotes = {
+                inc_votes: 5
+            }
+            return request(app).
+            patch('/api/articles/9999')
+            .send(incomingVotes)
+            .expect(404)
+            .then(({ body }) => {
+                expect(body.msg).toBe('Article not found!');
+              });
+        })
+        test("Status 400 - bad request - invalid ID format", () => {
+            const incomingVotes = {
+                inc_votes: 5
+            }
+            return request(app).
+            patch('/api/articles/notanumber')
+            .send(incomingVotes)
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.msg).toBe('Bad request!');
+              });
+        })
+        test("Status 400 - bad request - no inc_votes on body", () => {
+            const incomingVotes = {
+                no_inc_votes: 3
+            }
+            return request(app).
+            patch('/api/articles/3')
+            .send(incomingVotes)
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.msg).toBe('Bad request!');
+              });
+        })
+        test("Status 400 - bad request - invalid inc_votes", () => {
+            const incomingVotes = {
+                inc_votes: "cat"
+            }
+            return request(app).
+            patch('/api/articles/3')
+            .send(incomingVotes)
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.msg).toBe('Bad request!');
+              });
+        })
+    })
 })
 
 describe("/api/nothinghere", () => {
