@@ -1,4 +1,6 @@
-const { getTopics, getArticleById, patchArticleVotesById } = require("./controllers/topics.controller");
+const { getTopics } = require("./controllers/topics.controller");
+const { getArticleById, patchArticleVotesById } = require("./controllers/articles.controller");
+
 const express = require('express');
 const app = express();
 app.use(express.json())
