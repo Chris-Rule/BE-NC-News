@@ -1,4 +1,4 @@
-const {selectArticleById, updateArticleVotesById } = require("../models/topics.model")
+const {selectArticleById, updateArticleVotesById } = require("../models/articles.model")
 
 exports.getArticleById = (req, res, next) => {
     const {article_id: targetArticleId} = req.params;
