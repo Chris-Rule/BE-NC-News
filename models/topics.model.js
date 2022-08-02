@@ -1,3 +1,4 @@
+const { rows } = require("pg/lib/defaults");
 const db = require("../db/connection")
 
 exports.selectTopics = async () => {
@@ -7,7 +8,15 @@ exports.selectTopics = async () => {
 }
 
 exports.selectArticleById = async (targetArticleId) => {
-    const insertQuery = 'SELECT * FROM articles WHERE article_id = $1;'
-    const { rows } = await db.query(insertQuery,[targetArticleId]);
-    return rows;
+    
+    if(!Number.isInteger(Number(targetArticleId))){
+        return Promise.reject({status: 400, msg:'Bad request!'})
+    } else{
+        const insertQuery = 'SELECT * FROM articles WHERE article_id = $1;'
+        const {rows: article} = await db.query(insertQuery,[targetArticleId]);
+        if(article.length === 0){
+            return Promise.reject({status:404, msg:'Article not found!'});
+        }
+        return article;
+    }
 }

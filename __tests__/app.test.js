@@ -3,8 +3,6 @@ const request = require('supertest');
 const seed = require('../db/seeds/seed');
 const db = require('../db/connection');
 const data = require('../db/data/test-data');
-//const express = require('express');
-//app.use(express.json());
 
 afterAll(() => {
   return db.end();
@@ -51,6 +49,22 @@ describe("/api/articles/:article_id", () => {
                 expect(article).toHaveProperty('created_at');
                 expect(article).toHaveProperty('votes');
             })
+        })
+        test("Status 404 - Not found, ID is valid but does not exist", () => {
+            return request(app).
+            get('/api/articles/9999')
+            .expect(404)
+            .then(({ body }) => {
+                expect(body.msg).toBe('Article not found!');
+              });
+        })
+        test("Status 400 - bad request - invalid ID format", () => {
+            return request(app).
+            get('/api/articles/notanumber')
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.msg).toBe('Bad request!');
+              });
         })
     })
 })
