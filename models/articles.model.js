@@ -1,6 +1,17 @@
 const db = require("../db/connection")
 const format = require("pg-format");
 
+exports.selectArticles = async (orderBy = 'desc') => {
+    const upperOrderBy = orderBy.toUpperCase();
+    const validOrderBys = ['ASC', 'DESC'];
+    if(!validOrderBys.includes(upperOrderBy)){
+        return Promise.reject({status: 400, msg:'Bad request!'})
+    } else {
+        let insertQuery = `SELECT * FROM articles ORDER BY created_at ${upperOrderBy};`;
+        const { rows } = await db.query(insertQuery);
+        return rows;
+    }
+}
 
 exports.selectArticleById = async (targetArticleId) => {
     
