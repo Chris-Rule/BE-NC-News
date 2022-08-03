@@ -7,8 +7,19 @@ exports.selectArticles = async (orderBy = 'desc') => {
     if(!validOrderBys.includes(upperOrderBy)){
         return Promise.reject({status: 400, msg:'Bad request!'})
     } else {
-        let insertQuery = `SELECT * FROM articles ORDER BY created_at ${upperOrderBy};`;
-        const { rows } = await db.query(insertQuery);
+        let insertQuery = `SELECT articles.author, 
+                                articles.title,
+                                articles.article_id, 
+                                articles.topic, 
+                                articles.created_at, 
+                                articles.votes, 
+                                COUNT(comments.article_id) AS comment_count
+        FROM comments
+        FULL OUTER JOIN articles
+        ON articles.article_id = comments.article_id
+        GROUP BY articles.article_id
+        ORDER BY articles.created_at ${upperOrderBy};`;
+        const {rows} = await db.query(insertQuery);
         return rows;
     }
 }

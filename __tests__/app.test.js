@@ -42,6 +42,18 @@ describe("/api/articles", () => {
               expect(body).toBeInstanceOf(Object);
               expect(body).toHaveProperty('articles');
               expect(body.articles).toBeSortedBy('created_at', {descending: true});
+              const firstArticle = body.articles[0];
+              expect(firstArticle).toHaveProperty('author');
+              expect(firstArticle).toHaveProperty('title');
+              expect(firstArticle).toHaveProperty('article_id');
+              expect(firstArticle.article_id).toBe(3);
+              expect(firstArticle).toHaveProperty('comment_count');
+              expect(firstArticle.comment_count).toBe("2");
+              expect(firstArticle).toHaveProperty('topic');
+              expect(firstArticle).toHaveProperty('created_at');
+              expect(firstArticle.created_at).toBe("2020-11-03T09:12:00.000Z");
+              expect(firstArticle).toHaveProperty('votes');
+
           })
       })
   })
