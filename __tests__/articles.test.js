@@ -16,7 +16,7 @@ describe("/api/articles/:article_id", () => {
     describe("GET", () => {
         test("Status 200 - returns an article object", () => {
             return request(app)
-            .get('/api/articles/2')
+            .get('/api/articles/1')
             .expect(200)
             .then(({body}) => {
                 const article = body.article;
@@ -26,7 +26,9 @@ describe("/api/articles/:article_id", () => {
                 expect(article).toHaveProperty('author');
                 expect(article).toHaveProperty('title');
                 expect(article).toHaveProperty('article_id');
-                expect(article.article_id).toBe(2);
+                expect(article.article_id).toBe(1);
+                expect(article).toHaveProperty('comment_count');
+                expect(article.comment_count).toBe(11);
                 expect(article).toHaveProperty('body');
                 expect(article).toHaveProperty('topic');
                 expect(article).toHaveProperty('created_at');
@@ -67,6 +69,8 @@ describe("/api/articles/:article_id", () => {
                 expect(typeof article).toBe("object");
                 expect(article).toHaveProperty('article_id');
                 expect(article.article_id).toBe(3);
+                expect(article).toHaveProperty('comment_count');
+                expect(article.comment_count).toBe(2);
                 expect(article).toHaveProperty('votes');
                 expect(article.votes).toBe(5);
                 expect(article).toHaveProperty('author');
