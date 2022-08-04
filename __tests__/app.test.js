@@ -248,10 +248,86 @@ describe("/api/articles/:article_id/comments", () => {
       })
   })
   describe("POST", () => {
+
     test("Status 201 - returns the posted comment", () => {
-
-
+      const incomingComment = {
+        username: "icellusedkars",
+        body: "Posting my first comment!"
+    }
+      return request(app)
+      .post('/api/articles/2/comments')
+      .send(incomingComment)
+      .expect(201)
+      .then(({ body}) => {
+          expect(body).toBeInstanceOf(Object);
+          expect(body).toHaveProperty('postedComment');
+          expect(body.postedComment).toEqual(
+            expect.objectContaining({
+              comment_id: 19,
+              article_id:2,
+              votes: 0,
+              created_at: "2020-06-20T06:24:00.000Z",
+              author: "icellusedkars",
+              body: "Posting my first comment!"
+              }))
+      })
     })
+
+    test("Status 400 - username is not valid", () => {
+      const incomingComment = {
+        username: "Cat",
+        body: "This comment is a lie!"
+    }
+      return request(app)
+      .post('/api/articles/2/comments')
+      .send(incomingComment)
+      .expect(400)
+      .then(({ body}) => {
+        expect(body.msg).toBe('Username not found!');
+      })
+    })
+
+    test("Status 400 - body has no content", () => {
+      const incomingComment = {
+        username: "icellusedkars",
+        body: ""
+    }
+      return request(app)
+      .post('/api/articles/2/comments')
+      .send(incomingComment)
+      .expect(400)
+      .then(({ body}) => {
+        expect(body.msg).toBe('Comment not long enough!');
+      })
+    })
+
+    test("Status 404 - Not found, ID is valid but does not exist", () => {
+      const incomingComment = {
+        username: "icellusedkars",
+        body: "Posting my first comment!"
+    }
+      return request(app).
+      get('/api/articles/9999/comments')
+      .expect(404)
+      .send(incomingComment)
+      .then(({ body }) => {
+          expect(body.msg).toBe('Article not found!');
+        });
+    })
+
+    test("Status 400 - bad request - invalid ID format", () => {
+      const incomingComment = {
+        username: "icellusedkars",
+        body: "Posting my first comment!"
+    }
+      return request(app).
+      get('/api/articles/notanumber/comments')
+      .expect(400)
+      .send(incomingComment)
+      .then(({ body }) => {
+          expect(body.msg).toBe('Bad request!');
+        });
+  })
   })
 })
 
