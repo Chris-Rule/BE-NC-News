@@ -88,6 +88,7 @@ describe("/api/articles", () => {
                 votes: 0,
                 comment_count: '0'
               }))
+            expect(body.articles.length).not.toBe(0);
             body.articles.forEach(article => {expect(article).
               toEqual(expect.objectContaining({
                 article_id: expect.any(Number),
@@ -120,6 +121,7 @@ describe("/api/articles", () => {
               votes: 0,
               comment_count: '1'
             }))
+          expect(body.articles.length).not.toBe(0);
           body.articles.forEach(article => {expect(article).
             toEqual(expect.objectContaining({
               article_id: expect.any(Number),
@@ -152,6 +154,7 @@ describe("/api/articles", () => {
               votes: 100,
               comment_count: '11'
             }))
+          expect(body.articles.length).not.toBe(0);
           body.articles.forEach(article => {expect(article).
             toEqual(expect.objectContaining({
               article_id: expect.any(Number),
@@ -193,7 +196,7 @@ describe("/api/articles", () => {
     })
     test('Status 400 - filter by a topic that does not exist', () => {
       return request(app)
-      .get('/api/articles?sort_by=DAVE&order=desc&topic=VERISIMILITUDE')
+      .get('/api/articles?sort_by=title&order=desc&topic=VERISIMILITUDE')
       .expect(400)
       .then(({body}) => {
         expect(body.msg).toBe('Bad request!');
