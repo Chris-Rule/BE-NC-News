@@ -43,7 +43,6 @@ exports.selectArticles = async (sortBy = 'created_at' ,orderBy = 'desc', in_topi
     ORDER BY ${lowerSortBy} ${upperOrderBy};`;
     const {rows} = await db.query(insertQuery);
     return rows;
-    
 }
 
 exports.selectArticleById = async (targetArticleId) => {
