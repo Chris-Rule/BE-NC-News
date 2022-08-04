@@ -86,11 +86,15 @@ exports.selectCommentsByArticleId = async (targetArticleId) => {
 }
 
 exports.addCommentByArticleId = async (targetArticleId, incomingComment) => {
-    const votes = 0;
-    const created_at = '2020-06-20T07:24:00.000Z';
     const author = incomingComment.username;
     const body = incomingComment.body;
     const article_id = targetArticleId;
+
+    console.log(incomingComment.body);
+
+    if(!incomingComment.username || !incomingComment.body){
+        return Promise.reject({status:400, msg:'Bad request!'})
+    }
 
     if(!Number.isInteger(Number(targetArticleId))){
         return Promise.reject({status:400, msg:'Bad request!'})
@@ -99,7 +103,7 @@ exports.addCommentByArticleId = async (targetArticleId, incomingComment) => {
     const {rows: usernames} = await db.query('SELECT username FROM users');
     const validNames = usernames.map(user => user = user.username);
     if(!validNames.includes(author)){
-        return Promise.reject({status:400, msg:'Username not found!'});
+        return Promise.reject({status:404, msg:'Username not found!'});
     }
 
     if(body.length < 1){
@@ -114,8 +118,8 @@ exports.addCommentByArticleId = async (targetArticleId, incomingComment) => {
     }
 
     const {rows: [insertedQuery]} = await db.query(
-        'INSERT INTO comments (votes, created_at, author, body, article_id) VALUES ($1, $2, $3, $4, $5) RETURNING *;',
-        [ votes, created_at, author, body, article_id,])
+        'INSERT INTO comments (author, body, article_id) VALUES ($1, $2, $3) RETURNING *;',
+        [ author, body, article_id,])
     
     return insertedQuery;
 }

@@ -248,7 +248,6 @@ describe("/api/articles/:article_id/comments", () => {
       })
   })
   describe("POST", () => {
-
     test("Status 201 - returns the posted comment", () => {
       const incomingComment = {
         username: "icellusedkars",
@@ -260,16 +259,29 @@ describe("/api/articles/:article_id/comments", () => {
       .expect(201)
       .then(({ body}) => {
           expect(body).toBeInstanceOf(Object);
-          expect(body).toHaveProperty('postedComment');
-          expect(body.postedComment).toEqual(
+          expect(body).toHaveProperty('comment');
+          expect(body.comment).toEqual(
             expect.objectContaining({
               comment_id: 19,
               article_id:2,
               votes: 0,
-              created_at: "2020-06-20T06:24:00.000Z",
+              created_at: expect.any(String),
               author: "icellusedkars",
               body: "Posting my first comment!"
               }))
+      })
+    })
+
+    test("Status 400 - bad request - request data missing", () => {
+      const incomingComment = {
+        body: "This comment is a lie!"
+    }
+      return request(app)
+      .post('/api/articles/2/comments')
+      .send(incomingComment)
+      .expect(400)
+      .then(({ body}) => {
+        expect(body.msg).toBe('Bad request!');
       })
     })
 
@@ -281,7 +293,7 @@ describe("/api/articles/:article_id/comments", () => {
       return request(app)
       .post('/api/articles/2/comments')
       .send(incomingComment)
-      .expect(400)
+      .expect(404)
       .then(({ body}) => {
         expect(body.msg).toBe('Username not found!');
       })
@@ -297,7 +309,7 @@ describe("/api/articles/:article_id/comments", () => {
       .send(incomingComment)
       .expect(400)
       .then(({ body}) => {
-        expect(body.msg).toBe('Comment not long enough!');
+        expect(body.msg).toBe('Bad request!');
       })
     })
 

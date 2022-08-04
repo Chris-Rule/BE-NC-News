@@ -40,7 +40,7 @@ exports.postCommentByArticleId = (req, res, next) => {
     const inc_comment = req.body;
     const {article_id: targetArticleId} = req.params;
     addCommentByArticleId(targetArticleId,inc_comment).then((comment) => {
-        res.status(201).send({postedComment: comment});
+        res.status(201).send({comment: comment});
     })
     .catch(next);
 }
