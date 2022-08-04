@@ -5,7 +5,10 @@ const { selectArticleById,
         addCommentByArticleId} = require("../models/articles.model")
 
 exports.getArticles = (req, res, next) => {
-    selectArticles().then((articlesData) => {
+    const sortBy = req.query.sort_by;
+    const orderBy = req.query.order;
+    const topic = req.query.topic;
+    selectArticles(sortBy, orderBy, topic).then((articlesData) => {
         res.status(200).send({articles: articlesData});
     })
     .catch(next);
