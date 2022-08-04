@@ -84,3 +84,42 @@ exports.selectCommentsByArticleId = async (targetArticleId) => {
         }
     }
 }
+
+exports.addCommentByArticleId = async (targetArticleId, incomingComment) => {
+    const author = incomingComment.username;
+    const body = incomingComment.body;
+    const article_id = targetArticleId;
+
+    console.log(incomingComment.body);
+
+    if(!incomingComment.username || !incomingComment.body){
+        return Promise.reject({status:400, msg:'Bad request!'})
+    }
+
+    if(!Number.isInteger(Number(targetArticleId))){
+        return Promise.reject({status:400, msg:'Bad request!'})
+    }
+
+    const {rows: usernames} = await db.query('SELECT username FROM users');
+    const validNames = usernames.map(user => user = user.username);
+    if(!validNames.includes(author)){
+        return Promise.reject({status:404, msg:'Username not found!'});
+    }
+
+    if(body.length < 1){
+        return Promise.reject({status:400, msg:'Comment not long enough!'});
+    }
+
+    const articleQuery = 'SELECT * FROM articles WHERE article_id = $1;'
+    const {rows: article} = await db.query(articleQuery,[targetArticleId]);
+
+    if(article.length === 0){
+        return Promise.reject({status:404, msg:'Article not found!'});
+    }
+
+    const {rows: [insertedQuery]} = await db.query(
+        'INSERT INTO comments (author, body, article_id) VALUES ($1, $2, $3) RETURNING *;',
+        [ author, body, article_id,])
+    
+    return insertedQuery;
+}
