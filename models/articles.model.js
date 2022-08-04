@@ -1,27 +1,49 @@
 const db = require("../db/connection")
 const format = require("pg-format");
 
-exports.selectArticles = async (orderBy = 'desc') => {
+exports.selectArticles = async (sortBy = 'created_at' ,orderBy = 'desc', in_topic) => {
     const upperOrderBy = orderBy.toUpperCase();
+    const lowerSortBy = sortBy.toLowerCase();
     const validOrderBys = ['ASC', 'DESC'];
+    let topicFilter = '';
+
+    if(in_topic){
+        const lowerTopic = in_topic.toLowerCase();
+        const {rows: topics} = await db.query('SELECT * FROM topics;');
+        const validTopics = topics.map(topic => topic = topic.slug.toLowerCase());
+        if(!validTopics.includes(lowerTopic)){
+            return Promise.reject({status: 400, msg:'Bad request!'})
+        }
+        topicFilter = `WHERE articles.topic = '${lowerTopic}'`
+    }
+
+    const {rows: articles} = await db.query('SELECT * FROM articles LIMIT 1;');
+    const validSortBys = Object.keys(articles[0]).map(title => title.toLowerCase());
+    
+    if(!validSortBys.includes(lowerSortBy)){
+        return Promise.reject({status: 400, msg:'Bad request!'})
+    } 
+
     if(!validOrderBys.includes(upperOrderBy)){
         return Promise.reject({status: 400, msg:'Bad request!'})
-    } else {
-        let insertQuery = `SELECT articles.author, 
-                                articles.title,
-                                articles.article_id, 
-                                articles.topic, 
-                                articles.created_at, 
-                                articles.votes, 
-                                COUNT(comments.article_id) AS comment_count
-        FROM comments
-        FULL OUTER JOIN articles
-        ON articles.article_id = comments.article_id
-        GROUP BY articles.article_id
-        ORDER BY articles.created_at ${upperOrderBy};`;
-        const {rows} = await db.query(insertQuery);
-        return rows;
-    }
+    } 
+
+    let insertQuery = `SELECT articles.author, 
+                            articles.title,
+                            articles.article_id, 
+                            articles.topic, 
+                            articles.created_at, 
+                            articles.votes, 
+                            COUNT(comments.article_id) AS comment_count
+    FROM comments
+    FULL OUTER JOIN articles
+    ON articles.article_id = comments.article_id
+    ${topicFilter}
+    GROUP BY articles.article_id
+    ORDER BY ${lowerSortBy} ${upperOrderBy};`;
+    const {rows} = await db.query(insertQuery);
+    return rows;
+    
 }
 
 exports.selectArticleById = async (targetArticleId) => {
@@ -90,7 +112,6 @@ exports.addCommentByArticleId = async (targetArticleId, incomingComment) => {
     const body = incomingComment.body;
     const article_id = targetArticleId;
 
-    console.log(incomingComment.body);
 
     if(!incomingComment.username || !incomingComment.body){
         return Promise.reject({status:400, msg:'Bad request!'})
@@ -104,10 +125,6 @@ exports.addCommentByArticleId = async (targetArticleId, incomingComment) => {
     const validNames = usernames.map(user => user = user.username);
     if(!validNames.includes(author)){
         return Promise.reject({status:404, msg:'Username not found!'});
-    }
-
-    if(body.length < 1){
-        return Promise.reject({status:400, msg:'Comment not long enough!'});
     }
 
     const articleQuery = 'SELECT * FROM articles WHERE article_id = $1;'
