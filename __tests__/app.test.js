@@ -192,7 +192,7 @@ describe("/api/articles/:article_id", () => {
 
 describe("/api/articles/:article_id/comments", () => {
   describe("GET", () => {
-      test("Status 200 - returns an article object", () => {
+      test("Status 200 - returns an array of comment objects", () => {
           return request(app)
           .get('/api/articles/3/comments')
           .expect(200)
@@ -208,6 +208,7 @@ describe("/api/articles/:article_id/comments", () => {
                   author: "icellusedkars",
                   body: "git push origin master"
                 }))
+              expect(body.comments.length).toBe(2);
               body.comments.forEach(comment => {expect(comment).
                 toEqual(expect.objectContaining({
                   comment_id: expect.any(Number),
@@ -218,6 +219,17 @@ describe("/api/articles/:article_id/comments", () => {
                 }))})  
           })
       })
+      test("Status 200 - returns a zero length array when no comments", () => {
+        return request(app)
+        .get('/api/articles/2/comments')
+        .expect(200)
+        .then(({body}) => {
+            expect(body).toBeInstanceOf(Object);
+            expect(body).toHaveProperty('comments');
+            expect(Array.isArray(body.comments)).toBe(true);
+            expect(body.comments.length).toBe(0); 
+        })
+    })
       test("Status 404 - Not found, ID is valid but does not exist", () => {
           return request(app).
           get('/api/articles/9999/comments')
@@ -234,6 +246,12 @@ describe("/api/articles/:article_id/comments", () => {
               expect(body.msg).toBe('Bad request!');
             });
       })
+  })
+  describe("POST", () => {
+    test("Status 201 - returns the posted comment", () => {
+
+
+    })
   })
 })
 
