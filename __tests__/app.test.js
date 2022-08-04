@@ -73,6 +73,7 @@ describe("/api/articles", () => {
   })
 })
 
+
 describe("/api/articles/:article_id", () => {
   describe("GET", () => {
       test("Status 200 - returns an article object", () => {
@@ -181,6 +182,53 @@ describe("/api/articles/:article_id", () => {
           return request(app).
           patch('/api/articles/3')
           .send(incomingVotes)
+          .expect(400)
+          .then(({ body }) => {
+              expect(body.msg).toBe('Bad request!');
+            });
+      })
+  })
+})
+
+describe("/api/articles/:article_id/comments", () => {
+  describe("GET", () => {
+      test("Status 200 - returns an article object", () => {
+          return request(app)
+          .get('/api/articles/3/comments')
+          .expect(200)
+          .then(({body}) => {
+              expect(body).toBeInstanceOf(Object);
+              expect(body).toHaveProperty('comments');
+              expect(Array.isArray(body.comments)).toBe(true);
+              expect(body.comments[0]).toEqual(
+                expect.objectContaining({
+                  comment_id: 10,
+                  votes: 0,
+                  created_at: "2020-06-20T07:24:00.000Z",
+                  author: "icellusedkars",
+                  body: "git push origin master"
+                }))
+              body.comments.forEach(comment => {expect(comment).
+                toEqual(expect.objectContaining({
+                  comment_id: expect.any(Number),
+                  votes: expect.any(Number),
+                  created_at: expect.any(String),
+                  author: expect.any(String),
+                  body: expect.any(String),
+                }))})  
+          })
+      })
+      test("Status 404 - Not found, ID is valid but does not exist", () => {
+          return request(app).
+          get('/api/articles/9999/comments')
+          .expect(404)
+          .then(({ body }) => {
+              expect(body.msg).toBe('Article not found!');
+            });
+      })
+      test("Status 400 - bad request - invalid ID format", () => {
+          return request(app).
+          get('/api/articles/notanumber/comments')
           .expect(400)
           .then(({ body }) => {
               expect(body.msg).toBe('Bad request!');

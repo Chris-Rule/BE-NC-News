@@ -6,6 +6,7 @@
   "scripts": {
     "db-check-dev": "psql -f db/db-check-dev.sql",
     "db-check-test": "psql -f db/db-check-test.sql",
+    "db-query": "psql -f db/db-query-builder.sql",
     "setup-dbs": "psql -f ./db/setup.sql",
     "seed": "node ./db/seeds/run-seed.js",
     "test": "jest",
