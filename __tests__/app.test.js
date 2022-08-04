@@ -24,8 +24,12 @@ describe("/api/topics", () => {
               expect(body).toBeInstanceOf(Object);
               expect(body).toHaveProperty('topics');
               expect(Array.isArray(body.topics)).toBe(true);
-              expect(body.topics[0]).toHaveProperty('slug');
-              expect(body.topics[0]).toHaveProperty('description');
+              body.topics.forEach(topic => {expect(topic).
+                toEqual(expect.objectContaining({
+                  slug: expect.any(String),
+                  description: expect.any(String)
+                })
+              )})
           })
       })
   })
@@ -43,21 +47,32 @@ describe("/api/articles", () => {
               expect(body).toHaveProperty('articles');
               expect(body.articles).toBeSortedBy('created_at', {descending: true});
               const firstArticle = body.articles[0];
-              expect(firstArticle).toHaveProperty('author');
-              expect(firstArticle).toHaveProperty('title');
-              expect(firstArticle).toHaveProperty('article_id');
-              expect(firstArticle.article_id).toBe(3);
-              expect(firstArticle).toHaveProperty('comment_count');
-              expect(firstArticle.comment_count).toBe("2");
-              expect(firstArticle).toHaveProperty('topic');
-              expect(firstArticle).toHaveProperty('created_at');
-              expect(firstArticle.created_at).toBe("2020-11-03T09:12:00.000Z");
-              expect(firstArticle).toHaveProperty('votes');
-
+              expect(firstArticle).toEqual(
+                expect.objectContaining({
+                  article_id: 3,
+                  title: 'Eight pug gifs that remind me of mitch',
+                  author: 'icellusedkars',
+                  created_at: '2020-11-03T09:12:00.000Z',
+                  topic: 'mitch',
+                  votes: 0,
+                  comment_count: '2'
+                }))
+              body.articles.forEach(article => {expect(article).
+                toEqual(expect.objectContaining({
+                  article_id: expect.any(Number),
+                  title: expect.any(String),
+                  author: expect.any(String),
+                  created_at: expect.any(String),
+                  topic: expect.any(String),
+                  votes: expect.any(Number),
+                  comment_count: expect.any(String)
+                })
+              )})
           })
       })
   })
 })
+
 
 describe("/api/articles/:article_id", () => {
   describe("GET", () => {
@@ -66,20 +81,19 @@ describe("/api/articles/:article_id", () => {
           .get('/api/articles/1')
           .expect(200)
           .then(({body}) => {
-              const article = body.article;
-              expect(typeof body).toBe("object");
+              expect(body).toBeInstanceOf(Object);
               expect(body).toHaveProperty('article');
-              expect(typeof article).toBe("object");
-              expect(article).toHaveProperty('author');
-              expect(article).toHaveProperty('title');
-              expect(article).toHaveProperty('article_id');
-              expect(article.article_id).toBe(1);
-              expect(article).toHaveProperty('comment_count');
-              expect(article.comment_count).toBe(11);
-              expect(article).toHaveProperty('body');
-              expect(article).toHaveProperty('topic');
-              expect(article).toHaveProperty('created_at');
-              expect(article).toHaveProperty('votes');
+              expect(body.article).toEqual(
+                expect.objectContaining({
+                  article_id: 1,
+                  title: "Living in the shadow of a great man",
+                  author: "butter_bridge",
+                  body: "I find this existence challenging",
+                  created_at: "2020-07-09T20:11:00.000Z",
+                  topic: "mitch",
+                  votes: 100,
+                  comment_count: 11
+                }))
           })
       })
       test("Status 404 - Not found, ID is valid but does not exist", () => {
@@ -110,22 +124,19 @@ describe("/api/articles/:article_id", () => {
           .send(incomingVotes)
           .expect(201)
           .then(({body}) => {
-              const article = body.article;
-  
-              expect(typeof body).toBe("object");
+              expect(body).toBeInstanceOf(Object);
               expect(body).toHaveProperty('article');
-              expect(typeof article).toBe("object");
-              expect(article).toHaveProperty('article_id');
-              expect(article.article_id).toBe(3);
-              expect(article).toHaveProperty('comment_count');
-              expect(article.comment_count).toBe(2);
-              expect(article).toHaveProperty('votes');
-              expect(article.votes).toBe(5);
-              expect(article).toHaveProperty('author');
-              expect(article).toHaveProperty('title');
-              expect(article).toHaveProperty('body');
-              expect(article).toHaveProperty('topic');
-              expect(article).toHaveProperty('created_at');
+              expect(body.article).toEqual(
+                expect.objectContaining({
+                  article_id: 3,
+                  title: "Eight pug gifs that remind me of mitch",
+                  author: "icellusedkars",
+                  body: "some gifs",
+                  created_at: "2020-11-03T09:12:00.000Z",
+                  topic: "mitch",
+                  votes: 5,
+                  comment_count: 2
+                }))
           })
       })
       test("Status 404 - Not found, ID is valid but does not exist", () => {
@@ -179,6 +190,71 @@ describe("/api/articles/:article_id", () => {
   })
 })
 
+describe("/api/articles/:article_id/comments", () => {
+  describe("GET", () => {
+      test("Status 200 - returns an array of comment objects", () => {
+          return request(app)
+          .get('/api/articles/3/comments')
+          .expect(200)
+          .then(({body}) => {
+              expect(body).toBeInstanceOf(Object);
+              expect(body).toHaveProperty('comments');
+              expect(Array.isArray(body.comments)).toBe(true);
+              expect(body.comments[0]).toEqual(
+                expect.objectContaining({
+                  comment_id: 10,
+                  votes: 0,
+                  created_at: "2020-06-20T07:24:00.000Z",
+                  author: "icellusedkars",
+                  body: "git push origin master"
+                }))
+              expect(body.comments.length).toBe(2);
+              body.comments.forEach(comment => {expect(comment).
+                toEqual(expect.objectContaining({
+                  comment_id: expect.any(Number),
+                  votes: expect.any(Number),
+                  created_at: expect.any(String),
+                  author: expect.any(String),
+                  body: expect.any(String),
+                }))})  
+          })
+      })
+      test("Status 200 - returns a zero length array when no comments", () => {
+        return request(app)
+        .get('/api/articles/2/comments')
+        .expect(200)
+        .then(({body}) => {
+            expect(body).toBeInstanceOf(Object);
+            expect(body).toHaveProperty('comments');
+            expect(Array.isArray(body.comments)).toBe(true);
+            expect(body.comments.length).toBe(0); 
+        })
+    })
+      test("Status 404 - Not found, ID is valid but does not exist", () => {
+          return request(app).
+          get('/api/articles/9999/comments')
+          .expect(404)
+          .then(({ body }) => {
+              expect(body.msg).toBe('Article not found!');
+            });
+      })
+      test("Status 400 - bad request - invalid ID format", () => {
+          return request(app).
+          get('/api/articles/notanumber/comments')
+          .expect(400)
+          .then(({ body }) => {
+              expect(body.msg).toBe('Bad request!');
+            });
+      })
+  })
+  describe("POST", () => {
+    test("Status 201 - returns the posted comment", () => {
+
+
+    })
+  })
+})
+
 //USERS
 describe("/api/users", () => {
   describe("GET", () => {
@@ -190,16 +266,17 @@ describe("/api/users", () => {
               expect(body).toBeInstanceOf(Object);
               expect(body).toHaveProperty('users');
               expect(Array.isArray(body.users)).toBe(true);
-              expect(body.users[0]).toHaveProperty('username');
-              expect(body.users[0]).toHaveProperty('name');
-              expect(body.users[0]).toHaveProperty('avatar_url');
+              body.users.forEach(user => {expect(user).
+                toEqual(expect.objectContaining({
+                  username: expect.any(String),
+                  name: expect.any(String),
+                  avatar_url: expect.any(String)
+                })
+              )})
           })
       })
   })
 })
-
-
-
 
 //GENERAL
 describe("/api/nothinghere", () => {

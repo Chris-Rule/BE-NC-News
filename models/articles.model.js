@@ -63,5 +63,24 @@ exports.updateArticleVotesById = async (targetArticleId, incomingVotes) => {
             return article;
         }
     }
+}
 
+exports.selectCommentsByArticleId = async (targetArticleId) => {
+    if(!Number.isInteger(Number(targetArticleId))){
+        return Promise.reject({status:400, msg:'Bad request!'})
+    } else {
+        const articleQuery = 'SELECT * FROM articles WHERE article_id = $1;'
+        const {rows: article} = await db.query(articleQuery,[targetArticleId]);
+        
+        const commentQuery =   `SELECT comment_id, votes, created_at, author, body 
+                                FROM comments 
+                                WHERE article_id = $1`;
+        const {rows: comments} = await db.query(commentQuery,[targetArticleId]);
+
+        if(article.length === 0){
+            return Promise.reject({status:404, msg:'Article not found!'});
+        } else {
+            return comments;
+        }
+    }
 }
