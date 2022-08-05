@@ -3,4 +3,5 @@ node_modules
 db/db-check-dev.sql
 db/db-check-test.sql
 db/db-query-builder.sql
+db/setup.sql
 0 - NOTES-MARKDOWNS

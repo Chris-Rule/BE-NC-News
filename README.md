@@ -6,7 +6,6 @@
 2. [Installation](#installation)
 3. [Setup](#setup)
 4. [Running the Project](#running-the-project)
-5. [Licensing](#licensing)
 
 ## Project Description
 
@@ -22,6 +21,10 @@ This project utilises a PSQL database which is interacted with via node.js (http
 The following technologies have all been installed with node package manager (https://www.npmjs.com/).
 
 Please refer to the package.json file in the root directory for a complete list of dependencies and development dependencies - at the time of writing project dependencies are as follows:
+
+### Technologies
+
+- NODE.JS (https://nodejs.org/en/)(18.1.0)
 
 ### Dependencies
 
@@ -73,34 +76,22 @@ The two files are ".env.development" and ".env.test" and will be used by our Dot
 
 Each file should contain the following:
 
-PGDATABASE=database_name
+PGDATABASE=db
+
+Where "db" is the name of the respective database.
 
 ### Database Seeding
 
-There are two scripts to set up the test and development databases, both located in the package.json folder:
-
-"npm setup-dbs" - this sets up both the test and the development databases
+There are main script to set up is as follows as is located in the package.json.
 
 npm seed - this by default will populate the development database. The app.test.js file will execute this to populate the test database.
 
 ## Running the Project
 
-The intent is to have this project executable at four different stages:
+### Testing
 
-Note - previous stages may still be in progress when later stages have been reached.
+All tests can be ran with the script "npm test" and are located in the //**tests** folder.
 
-1 - Unit testing only.
-If app.js is not visible in the root project directory then this project is still in setup - refer to **tests** folder.
+### Cloud Hosting
 
-2 - Integration and unit testing.
-If app.js has been produced and placed in the root project directory then integration testing will be taking place alongside unit testing.
-
-3 - Simple back end testing
-If a listen.js file has been placed in the root directory and the PORT is manually assigned then the project is at an early stage of usability and API calls can be made on the local machine using an API client like Insomnia (https://insomnia.rest/)
-
-4 - Cloud back end testing with Heroku
-If a listen.js file exists in the root directory and the PORT is assigned from the process.env environment object then the project has been deployed to Heroku (https://www.heroku.com/) and API calls should be available online.
-
-## Licensing
-
-FILL THIS OUT
+https://devcenter.heroku.com/start
