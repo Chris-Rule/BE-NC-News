@@ -3,11 +3,41 @@ const request = require('supertest');
 const seed = require('../db/seeds/seed');
 const db = require('../db/connection');
 const data = require('../db/data/test-data');
-const res = require('express/lib/response');
 
 afterAll(() => {
   return db.end();
 });
+
+//API
+
+describe("/api", () => {
+
+  beforeEach(() => {
+    return seed(data);
+  });
+
+  describe("GET", () => {
+    test("Status 200 - returns a JSON containing all available endpoints", () => {
+      return request(app)
+      .get('/api')
+      .expect(200)
+      .then(({body}) => {
+        expect(body).toEqual(
+          expect.objectContaining({
+            'GET /api': expect.anything(),
+            'GET /api/topics': expect.anything(),
+            'GET /api/articles': expect.anything(),
+            'GET /api/articles/:article_id': expect.anything(),
+            'GET /api/articles/:article_id/comments': expect.anything(),
+            'PATCH /api/articles/:article_id': expect.anything(),
+            'POST /api/articles/:article_id/comments': expect.anything(),
+            'GET /api/users': expect.anything(),
+            'DELETE /api/comments/:comment_id': expect.anything()
+          }))
+      })
+    })
+  })
+})
 
 //TOPICS
 describe("/api/topics", () => {

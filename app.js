@@ -8,8 +8,12 @@ const { getUsers } = require("./controllers/users.controller");
 const { deleteCommentById } = require("./controllers/comments.controller");
 
 const express = require('express');
+const { getAPIJSON } = require("./controllers/api.controller");
 const app = express();
 app.use(express.json())
+
+//api
+app.get('/api',getAPIJSON)
 
 //topics
 app.get('/api/topics', getTopics);
