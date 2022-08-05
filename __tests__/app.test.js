@@ -3,6 +3,7 @@ const request = require('supertest');
 const seed = require('../db/seeds/seed');
 const db = require('../db/connection');
 const data = require('../db/data/test-data');
+const res = require('express/lib/response');
 
 afterAll(() => {
   return db.end();
@@ -497,6 +498,37 @@ describe("/api/users", () => {
       })
   })
 })
+
+//COMMENTS
+describe("/api/comments/:comment_id", () => {
+  describe("DELETE", () => {
+    test("Status 204 - deletes the comment and returns no content", () => {
+      return request(app)
+      .delete('/api/comments/2')
+      .expect(204)
+      .then((body) => {
+        expect(body.status).toBe(204);
+      });
+    })
+    test("Status 404 - valid ID that doesn't exist", () => {
+      return request(app)
+      .delete('/api/comments/9999')
+      .expect(404)
+      .then(({body}) => {
+        expect(body.msg).toBe('Not found!');
+      });
+    })
+    test("Status 400 - invalid comment id", () => {
+      return request(app)
+      .delete('/api/comments/BANANA')
+      .expect(400)
+      .then(({body}) => {
+        expect(body.msg).toBe('Bad request!');
+      });
+    })
+  })
+})
+
 
 //GENERAL
 describe("/api/nothinghere", () => {

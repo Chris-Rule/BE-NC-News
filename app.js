@@ -5,6 +5,7 @@ const { getArticleById,
         getCommentsByArticleId, 
         postCommentByArticleId} = require("./controllers/articles.controller");
 const { getUsers } = require("./controllers/users.controller");
+const { deleteCommentById } = require("./controllers/comments.controller");
 
 const express = require('express');
 const app = express();
@@ -22,6 +23,9 @@ app.post('/api/articles/:article_id/comments', postCommentByArticleId);
 
 //users
 app.get('/api/users',getUsers);
+
+//comments
+app.delete('/api/comments/:comment_id', deleteCommentById);
 
 app.all('*', (req,res) => {
     res.status(404).send({msg:'bad path!'});
