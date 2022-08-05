@@ -9,12 +9,13 @@ afterAll(() => {
   return db.end();
 });
 
-beforeEach(() => {
-  return seed(data);
-});
-
 //TOPICS
 describe("/api/topics", () => {
+
+  beforeEach(() => {
+    return seed(data);
+  });
+
   describe("GET", () => {
       test("Status 200 - Returns array of topic objects", () => {
           return request(app)
@@ -37,6 +38,11 @@ describe("/api/topics", () => {
 
 //ARTICLES
 describe("/api/articles", () => {
+
+  beforeEach(() => {
+    return seed(data);
+  });
+
   describe("GET", () => {
       test("Status 200 - Returns array of article objects sorted by date by default", () => {
           return request(app)
@@ -208,6 +214,11 @@ describe("/api/articles", () => {
 
 
 describe("/api/articles/:article_id", () => {
+
+  beforeEach(() => {
+    return seed(data);
+  });
+
   describe("GET", () => {
       test("Status 200 - returns an article object", () => {
           return request(app)
@@ -248,6 +259,11 @@ describe("/api/articles/:article_id", () => {
   })
 
   describe("PATCH", () => {
+
+    beforeEach(() => {
+      return seed(data);
+    });
+
       test("Status 200 - returns an article object", () => {
           const incomingVotes = {
               inc_votes: 5
@@ -324,6 +340,11 @@ describe("/api/articles/:article_id", () => {
 })
 
 describe("/api/articles/:article_id/comments", () => {
+
+  beforeEach(() => {
+    return seed(data);
+  });
+
   describe("GET", () => {
       test("Status 200 - returns an array of comment objects", () => {
           return request(app)
@@ -478,6 +499,11 @@ describe("/api/articles/:article_id/comments", () => {
 
 //USERS
 describe("/api/users", () => {
+
+  beforeEach(() => {
+    return seed(data);
+  });
+  
   describe("GET", () => {
       test("Status 200 - Returns array of user objects", () => {
           return request(app)
@@ -502,6 +528,11 @@ describe("/api/users", () => {
 //COMMENTS
 describe("/api/comments/:comment_id", () => {
   describe("DELETE", () => {
+
+    beforeEach(() => {
+      return seed(data);
+    });
+
     test("Status 204 - deletes the comment and returns no content", () => {
       return request(app)
       .delete('/api/comments/2')
@@ -527,11 +558,35 @@ describe("/api/comments/:comment_id", () => {
       });
     })
   })
+  describe('DELETE - Integration Test', () => {
+    //does not re-seed before each test
+    test("Status 204 - deletes the comment and returns no content", () => {
+      return request(app)
+      .delete('/api/comments/2')
+      .expect(204)
+      .then((body) => {
+        expect(body.status).toBe(204);
+      });
+    })
+    test("Status 404 - valid ID that doesn't exist", () => {
+      return request(app)
+      .delete('/api/comments/2')
+      .expect(404)
+      .then(({body}) => {
+        expect(body.msg).toBe('Not found!');
+      });
+    })
+  })
 })
 
 
 //GENERAL
 describe("/api/nothinghere", () => {
+
+  beforeEach(() => {
+    return seed(data);
+  });
+
     describe("GET", () => {
         test("Status 404 - Not found", () => {
             return request(app)
