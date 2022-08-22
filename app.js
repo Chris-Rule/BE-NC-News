@@ -6,10 +6,12 @@ const { getArticleById,
         postCommentByArticleId} = require("./controllers/articles.controller");
 const { getUsers } = require("./controllers/users.controller");
 const { deleteCommentById } = require("./controllers/comments.controller");
+const cors = require('cors');
 
 const express = require('express');
 const { getAPIJSON } = require("./controllers/api.controller");
 const app = express();
+app.use(cors());
 app.use(express.json())
 
 //api
