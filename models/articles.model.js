@@ -19,6 +19,8 @@ exports.selectArticles = async (sortBy = 'created_at' ,orderBy = 'desc', in_topi
 
     const {rows: articles} = await db.query('SELECT * FROM articles LIMIT 1;');
     const validSortBys = Object.keys(articles[0]).map(title => title.toLowerCase());
+    validSortBys.push('comment_count');
+    console.log(validSortBys);
     
     if(!validSortBys.includes(lowerSortBy)){
         return Promise.reject({status: 400, msg:'Bad request!'})
