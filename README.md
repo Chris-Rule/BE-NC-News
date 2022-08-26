@@ -11,8 +11,14 @@
 
 This project will set out the back end infrastructure for a news style website. The intention here is to mimic the building of a real world backend service (such as reddit) which should provide this information to the front end architecture.
 
-Hosted version can be found here:
-https://cr-nc-news.herokuapp.com/
+### Project Links
+
+Front End: https://nc-news-cr.netlify.app/
+Front End Beta: https://6308d824069def2d9e33bb70--nc-news-cr.netlify.app/coding
+Repo: https://github.com/Chris-Rule/nc-news
+
+Back End: https://cr-nc-news.herokuapp.com/
+Repo: https://github.com/Chris-Rule/BE-NC-News
 
 ## Installation
 
