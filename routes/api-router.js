@@ -2,11 +2,13 @@ const { getAPIJSON } = require("../controllers/api.controller");
 
 const apiRouter = require('express').Router();
 const topicRouter = require("./topics-router");
+const articlesRouter = require("./articles-router");
 
-//Base
+//api
 apiRouter.get('/',getAPIJSON);
 
-//topics
+//routes
 apiRouter.use('/topics', topicRouter);
+apiRouter.use('/articles',articlesRouter);
 
 module.exports = apiRouter;

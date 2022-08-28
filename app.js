@@ -1,8 +1,3 @@
-const { getArticleById, 
-        patchArticleVotesById, 
-        getArticles, 
-        getCommentsByArticleId, 
-        postCommentByArticleId} = require("./controllers/articles.controller");
 const { getUsers } = require("./controllers/users.controller");
 const { deleteCommentById } = require("./controllers/comments.controller");
 const cors = require('cors');
@@ -15,15 +10,8 @@ const app = express();
 app.use(cors());
 app.use(express.json())
 
-//api
+//Routing tree
 app.use('/api',apiRouter);
-
-//articles
-app.get('/api/articles',getArticles);
-app.get('/api/articles/:article_id',getArticleById);
-app.get('/api/articles/:article_id/comments',getCommentsByArticleId);
-app.patch('/api/articles/:article_id',patchArticleVotesById);
-app.post('/api/articles/:article_id/comments', postCommentByArticleId);
 
 //users
 app.get('/api/users',getUsers);
