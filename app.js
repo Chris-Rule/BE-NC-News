@@ -1,4 +1,3 @@
-const { getTopics } = require("./controllers/topics.controller");
 const { getArticleById, 
         patchArticleVotesById, 
         getArticles, 
@@ -9,16 +8,15 @@ const { deleteCommentById } = require("./controllers/comments.controller");
 const cors = require('cors');
 
 const express = require('express');
-const { getAPIJSON } = require("./controllers/api.controller");
+const apiRouter = require("./routes/api-router")
 const app = express();
+
+
 app.use(cors());
 app.use(express.json())
 
 //api
-app.get('/api',getAPIJSON)
-
-//topics
-app.get('/api/topics', getTopics);
+app.use('/api',apiRouter);
 
 //articles
 app.get('/api/articles',getArticles);
