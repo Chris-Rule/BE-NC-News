@@ -88,7 +88,7 @@ describe("/api/articles", () => {
                   article_id: 3,
                   title: 'Eight pug gifs that remind me of mitch',
                   author: 'icellusedkars',
-                  created_at: '2020-11-03T09:12:00.000Z',
+                  created_at: expect.any(String),
                   topic: 'mitch',
                   votes: 0,
                   comment_count: '2'
@@ -120,7 +120,7 @@ describe("/api/articles", () => {
                 article_id: 12,
                 title: 'Moustache',
                 author: 'butter_bridge',
-                created_at: '2020-10-11T11:24:00.000Z',
+                created_at: expect.any(String),
                 topic: 'mitch',
                 votes: 0,
                 comment_count: '0'
@@ -153,7 +153,7 @@ describe("/api/articles", () => {
               article_id: 6,
               title: 'A',
               author: 'icellusedkars',
-              created_at: '2020-10-18T01:00:00.000Z',
+              created_at: expect.any(String),
               topic: 'mitch',
               votes: 0,
               comment_count: '1'
@@ -186,7 +186,7 @@ describe("/api/articles", () => {
               article_id: 1,
               title: 'Living in the shadow of a great man',
               author: 'butter_bridge',
-              created_at: '2020-07-09T20:11:00.000Z',
+              created_at: expect.any(String),
               topic: 'mitch',
               votes: 100,
               comment_count: '11'
@@ -263,7 +263,7 @@ describe("/api/articles/:article_id", () => {
                   title: "Living in the shadow of a great man",
                   author: "butter_bridge",
                   body: "I find this existence challenging",
-                  created_at: "2020-07-09T20:11:00.000Z",
+                  created_at: expect.any(String),
                   topic: "mitch",
                   votes: 100,
                   comment_count: 11
@@ -311,7 +311,7 @@ describe("/api/articles/:article_id", () => {
                   title: "Eight pug gifs that remind me of mitch",
                   author: "icellusedkars",
                   body: "some gifs",
-                  created_at: "2020-11-03T09:12:00.000Z",
+                  created_at: expect.any(String),
                   topic: "mitch",
                   votes: 5,
                   comment_count: 2
@@ -388,7 +388,7 @@ describe("/api/articles/:article_id/comments", () => {
                 expect.objectContaining({
                   comment_id: 10,
                   votes: 0,
-                  created_at: "2020-06-20T07:24:00.000Z",
+                  created_at: expect.any(String),
                   author: "icellusedkars",
                   body: "git push origin master"
                 }))
