@@ -112,6 +112,16 @@
         }
       ]
     }
+  },"GET /api/users/:username": {
+    "description": "serves a single user object on the key of user",
+    "exampleResponse": {
+      "user":
+        {
+          "username": "Dave",
+          "name": "Also Dave",
+          "avatar_url": "DavesFace.com"
+        }
+    }
   },
   "DELETE /api/comments/:comment_id": {
     "description": "deletes a specific comment by passed comment ID",
