@@ -555,6 +555,40 @@ describe("/api/users", () => {
   })
 })
 
+describe("/api/users/:username", () => {
+
+  beforeEach(() => {
+    return seed(data);
+  });
+  
+  describe("GET", () => {
+    test("Status 200 - Returns a user object by user ID", () => {
+      return request(app)
+        .get('/api/users/butter_bridge')
+        .expect(200)
+        .then(({body}) => {
+          expect(body).toBeInstanceOf(Object);
+          expect(body).toHaveProperty('user');
+          expect(body.user).toEqual(
+            expect.objectContaining({
+              username: 'butter_bridge',
+              name: 'jonny',
+              avatar_url: 'https://www.healthytherapies.com/wp-content/uploads/2016/06/Lime3.jpg'
+            }))
+      })
+    })
+    test("Status 404 - Not found, username is valid but does not exist", () => {
+      return request(app).
+      get('/api/users/hello_dave')
+      .expect(404)
+      .then(({ body }) => {
+          expect(body.msg).toBe('User not found!');
+        });
+    })
+  })
+})
+
+
 //COMMENTS
 describe("/api/comments/:comment_id", () => {
   describe("DELETE", () => {
@@ -628,3 +662,4 @@ describe("/api/nothinghere", () => {
         })
     })
 })
+
