@@ -3,7 +3,7 @@ const { deleteCommentById } = require("./controllers/comments.controller");
 const cors = require('cors');
 
 const express = require('express');
-const apiRouter = require("./routes/api-router")
+const apiRouter = require("./routes/api-router");
 const app = express();
 
 app.use(cors());

@@ -14,8 +14,7 @@ This project will set out the back end infrastructure for a news style website. 
 ### Project Links
 
 Front End: https://nc-news-cr.netlify.app/
-Front End Beta: https://6308d824069def2d9e33bb70--nc-news-cr.netlify.app/coding
-Repo: https://github.com/Chris-Rule/nc-news
+Repo: https://github.com/Chris-Rule/FE-NC-News
 
 Back End: https://cr-nc-news.herokuapp.com/
 Repo: https://github.com/Chris-Rule/BE-NC-News
